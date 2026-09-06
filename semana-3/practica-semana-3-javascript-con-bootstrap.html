@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo Dinámico de Productos</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container mt-5">
+    <h2 class="text-primary mb-4">Práctica de JS con Bootstrap</h2>
+
+    
+    <div class="card p-4 shadow-sm mb-5">
+        <h4>Agregar Nuevo Producto</h4>
+        <div class="row g-3">
+            <div class="col-md-5">
+                <input id="txtNombre" type="text" class="form-control" placeholder="Ingrese nombre del producto " />
+            </div>
+            <div class="col-md-5">
+                <input id="txtPrecio" type="number" class="form-control" placeholder="Precio (numero)" />
+            </div>
+            <div class="col-md-2">
+                <button type="button" class="btn btn-success w-100" onclick="agregarProducto();">Añadir</button>
+            </div>
+        </div>
+    </div>
+
+   
+    <h4 class="mb-3">Objetos Disponibles</h4>
+    <div id="contenedorProductos" class="row">
+    </div>
+</div>
+
+<script>
+    const respuestaAPI = {
+        "status": 200,
+        "message" : "Productos obtenidos correctamente",
+        "data": [
+            { "id": 1, "nombre": "Lápiz", "precio": 500 },
+            { "id": 2, "nombre": "Celular", "precio": 600000 }
+        ]
+    };
+
+    function cargarProductos(){
+        let contenedor = document.getElementById("contenedorProductos");
+        
+        
+        contenedor.innerHTML = ""; 
+
+        respuestaAPI.data.forEach((producto) => {
+            
+            let col = document.createElement("div");
+            col.setAttribute("class", "col-md-4 mb-4"); 
+
+            
+            let card = document.createElement("div");
+            card.setAttribute("class", "card h-100 shadow-sm border-primary");
+
+            
+            let cardBody = document.createElement("div");
+            cardBody.setAttribute("class", "card-body");
+
+            
+            let title = document.createElement("h5");
+            title.setAttribute("class", "card-title text-primary");
+            title.innerText = producto.nombre;
+
+            
+            let text = document.createElement("p");
+            text.setAttribute("class", "card-text fw-bold");
+            text.innerText = `$${producto.precio}`;
+
+           
+            cardBody.appendChild(title);
+            cardBody.appendChild(text);
+            card.appendChild(cardBody);
+            col.appendChild(card);
+            
+            
+            contenedor.appendChild(col);
+        });
+    }
+
+    
+    function agregarProducto(){
+        let nombre = document.getElementById("txtNombre").value;
+        let precio = document.getElementById("txtPrecio").value;
+
+        
+        if(nombre === "" || precio === ""){
+            alert("Por favor, llena ambos campos.");
+            return;
+        }
+
+        
+        let nuevoProducto = {
+            "id": respuestaAPI.data.length + 1,
+            "nombre": nombre,
+            "precio": parseInt(precio)
+        };
+        respuestaAPI.data.push(nuevoProducto);
+
+        
+        document.getElementById("txtNombre").value = "";
+        document.getElementById("txtPrecio").value = "";
+
+     
+        cargarProductos();
+    }
+
+    window.onload = cargarProductos;
+</script>
+
+</body>
+</html>
